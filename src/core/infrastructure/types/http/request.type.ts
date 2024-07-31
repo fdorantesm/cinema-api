@@ -1,0 +1,6 @@
+import { Request as ExpressRequest } from 'express';
+
+import { Context } from '@/core/domain/interfaces/context.interface';
+import type { UserRequest } from '@/core/infrastructure/types/http/user-request.type';
+
+export type Request = ExpressRequest & Context & UserRequest & { context: Context };
