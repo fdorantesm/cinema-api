@@ -4,7 +4,7 @@ import type { RatingBlockEnum } from '@/modules/movies/domain/enums/rating-block
 export interface Movie extends ResourceProps {
   name: string;
   genres: string[];
-  sinopsis: string;
+  synopsis: string;
   duration: number;
   releaseDate: Date;
   director: string;

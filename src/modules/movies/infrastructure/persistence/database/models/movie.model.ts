@@ -16,7 +16,7 @@ export class MovieModel extends ResourceDocument {
   genres: string[];
 
   @Prop({ type: String })
-  sinopsis: string;
+  synopsis: string;
 
   @Prop({ type: Number })
   duration: number;

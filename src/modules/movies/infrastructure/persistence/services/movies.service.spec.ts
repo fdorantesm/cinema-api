@@ -53,7 +53,7 @@ describe('MoviesService', () => {
     rows.forEach((row: Movie) => {
       expect(row).toHaveProperty('name');
       expect(row).toHaveProperty('genres');
-      expect(row).toHaveProperty('sinopsis');
+      expect(row).toHaveProperty('synopsis');
       expect(row).toHaveProperty('duration');
       expect(row).toHaveProperty('releaseDate');
       expect(row).toHaveProperty('director');

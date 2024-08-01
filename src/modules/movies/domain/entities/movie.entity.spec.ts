@@ -7,7 +7,7 @@ describe('MovieEntity', () => {
       uuid: '123',
       name: 'Movie Name',
       genres: ['Action'],
-      sinopsis: 'Sinopsis',
+      synopsis: 'synopsis',
       duration: 120,
       releaseDate: new Date('2021-01-01'),
       director: 'Director Name',
@@ -22,7 +22,7 @@ describe('MovieEntity', () => {
     expect(movie).toBeInstanceOf(MovieEntity);
     expect(movie.getName()).toBe('Movie Name');
     expect(movie.getGenres()).toEqual(['Action']);
-    expect(movie.getSinopsis()).toBe('Sinopsis');
+    expect(movie.getsynopsis()).toBe('synopsis');
     expect(movie.getDuration()).toBe(120);
     expect(movie.getReleaseDate()).toEqual(new Date('2021-01-01'));
     expect(movie.getDirector()).toBe('Director Name');
@@ -37,7 +37,7 @@ describe('MovieEntity', () => {
       uuid: '123',
       name: 'Movie Name',
       genres: ['Action'],
-      sinopsis: 'Sinopsis',
+      synopsis: 'synopsis',
       duration: 120,
       releaseDate: new Date('2021-01-01'),
       director: 'Director Name',
@@ -53,7 +53,7 @@ describe('MovieEntity', () => {
       uuid: '123',
       name: 'Movie Name',
       genres: ['Action'],
-      sinopsis: 'Sinopsis',
+      synopsis: 'synopsis',
       duration: 120,
       releaseDate: new Date('2021-01-01'),
       director: 'Director Name',

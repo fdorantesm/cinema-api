@@ -14,8 +14,8 @@ export class MovieEntity extends ResourceEntity<Movie> {
     return this._props.genres;
   }
 
-  public getSinopsis(): string {
-    return this._props.sinopsis;
+  public getsynopsis(): string {
+    return this._props.synopsis;
   }
 
   public getDuration(): number {
