@@ -35,7 +35,7 @@ import { RequestContextMiddleware } from '@/core/infrastructure/middlewares/requ
   ],
 })
 export class CoreModule {
-  configure(consumer: MiddlewareConsumer) {
+  public configure(consumer: MiddlewareConsumer) {
     consumer.apply(RequestContextMiddleware, RequestLoggerMiddleware).forRoutes({
       path: '*',
       method: RequestMethod.ALL,

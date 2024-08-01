@@ -4,7 +4,7 @@ import { QueryParsedOptions } from '@/core/types/general/query-parsed-options.ty
 import { Pagination } from './pagination';
 
 export interface Crud<I, E> {
-  create(role: I): Promise<E>;
+  create(role: I): Promise<E | undefined>;
   find(filter?: Filter<I>, projection?: Json, options?: QueryParsedOptions): Promise<E[]>;
   findOne(filter?: Filter<I>, projection?: Json, options?: QueryParsedOptions): Promise<E>;
   findById(uuid: string): Promise<E>;

@@ -76,8 +76,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
     const { nodeEnv } = this.configService.get('environment');
     const body = sanitizeJson(data);
 
-    if (nodeEnv === 'production') {
-    } else {
+    if (nodeEnv !== 'production') {
       Logger.log(body, context);
     }
   }

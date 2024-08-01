@@ -26,6 +26,11 @@ module.exports = {
       { argsIgnorePattern: '^(_|ctx|req|res|next|err)' },
     ],
     '@typescript-eslint/no-extraneous-class': 'off',
+    '@typescript-eslint/no-invalid-this': 'off',
+    // An interface declaring no members is equivalent to its supertype
+    '@typescript-eslint/no-empty-interface': 'off',
+    '@typescript-eslint/no-invalid-this': 'off',
+    '@typescript-eslint/class-methods-use-this': 'off',
   },
   overrides: [
     {

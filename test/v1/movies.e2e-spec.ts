@@ -1,7 +1,7 @@
 import Datastore = require('nedb-promises');
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import { agent } from 'supertest';
 
 import { CoreModule } from '@/core/core.module';
 import { MoviesMemoryRepository } from '@/modules/movies/infrastructure/persistence/database/repositories/movies.memory-repository';
@@ -46,7 +46,7 @@ describe('MoviesController (e2e)', () => {
 
   it('GET /v1/movies', async () => {
     await moviesRepository.createMany(movies);
-    const response = await request(app.getHttpServer()).get('/v1/movies');
+    const response = await agent(app.getHttpServer()).get('/v1/movies');
     const data = response.body.data;
     expect(response.status).toBe(HttpStatus.OK);
     expect(data).toHaveProperty('docs');
@@ -59,7 +59,7 @@ describe('MoviesController (e2e)', () => {
 
   it('GET /v1/movies/:uuid', async () => {
     await moviesRepository.createMany(movies);
-    const response = await request(app.getHttpServer()).get(`/v1/movies/123`);
+    const response = await agent(app.getHttpServer()).get('/v1/movies/123');
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body.data).toEqual({
       ...movies[0],

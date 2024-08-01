@@ -31,11 +31,13 @@ export class BaseRepository<I, E extends Entity<I>> implements Crud<I, E> {
     return new this.entityClass(data);
   }
 
-  public async findById(uuid: string): Promise<E> {
+  public async findById(uuid: string): Promise<E | undefined> {
     const row = await this.model.findOne({ uuid }).exec();
     if (row) {
       return this.mapToEntity(row.toJSON() as I);
     }
+
+    return undefined;
   }
 
   public async findManyByUuids?(uuids: string[]): Promise<E[]> {
@@ -49,13 +51,13 @@ export class BaseRepository<I, E extends Entity<I>> implements Crud<I, E> {
   }
 
   public async findOne(filter: Filter<I>): Promise<E> {
-    const q = { ...filter } as any;
+    const queryFilter = { ...filter } as any;
 
     if (this.options?.softDelete !== undefined) {
-      q.isDeleted = this.options.softDelete;
+      queryFilter.isDeleted = this.options.softDelete;
     }
 
-    const row = await this.model.findOne(q).exec();
+    const row = await this.model.findOne(queryFilter).exec();
 
     if (row) {
       return this.mapToEntity(row.toJSON() as I);
@@ -82,13 +84,13 @@ export class BaseRepository<I, E extends Entity<I>> implements Crud<I, E> {
     projection?: Json,
     options?: QueryParsedOptions,
   ): Promise<E[]> {
-    const q = { ...filter } as any;
+    const queryFilter = { ...filter } as any;
 
     if (this.options?.softDelete !== undefined) {
-      q.isDeleted = this.options.softDelete;
+      queryFilter.isDeleted = this.options.softDelete;
     }
 
-    const rows = await this.model.find(q as I, projection, options).exec();
+    const rows = await this.model.find(queryFilter as I, projection, options).exec();
     return rows.map((row) => this.mapToEntity(row.toJSON() as I));
   }
 
@@ -106,21 +108,23 @@ export class BaseRepository<I, E extends Entity<I>> implements Crud<I, E> {
     projection?: Json,
     options?: QueryParsedOptions,
   ): Promise<E[]> {
-    const q = { ...filter } as any;
+    const queryFilter = { ...filter } as any;
 
     if (this.options?.softDelete !== undefined) {
-      q.isDeleted = this.options.softDelete;
+      queryFilter.isDeleted = this.options.softDelete;
     }
 
-    const rows = await this.model.find(q as I, projection, options).exec();
+    const rows = await this.model.find(queryFilter as I, projection, options).exec();
     return rows.map((row) => this.mapToEntity(row.toJSON() as I));
   }
 
-  public async create(data: I): Promise<E> {
+  public async create(data: I): Promise<E | undefined> {
     const row = await this.model.create(data);
     if (row) {
       return this.mapToEntity(row.toJSON() as I);
     }
+
+    return undefined;
   }
 
   public async update(filter: Filter<I>, data: I): Promise<E> {
@@ -146,7 +150,7 @@ export class BaseRepository<I, E extends Entity<I>> implements Crud<I, E> {
     return deleted.deletedCount > 0;
   }
 
-  public async count(filter?: Filter<I>, options?: QueryParsedOptions): Promise<number> {
+  public count(filter?: Filter<I>, options?: QueryParsedOptions): Promise<number> {
     return this.model.countDocuments(filter as I, options).exec();
   }
 
