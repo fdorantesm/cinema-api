@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import { agent } from 'supertest';
 
 import { HealthModule } from '@/modules/health/health.module';
 import { CoreModule } from '@/core/core.module';
@@ -18,6 +18,6 @@ describe('HealthController (e2e)', () => {
   });
 
   it('GET /health', () => {
-    return request(app.getHttpServer()).get('/health').expect(HttpStatus.NO_CONTENT);
+    return agent(app.getHttpServer()).get('/health').expect(HttpStatus.NO_CONTENT);
   });
 });

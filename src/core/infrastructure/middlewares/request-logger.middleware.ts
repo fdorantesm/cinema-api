@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import type { Json } from '@/core/domain/json';
@@ -6,12 +6,8 @@ import { sanitizeJson } from '@/utils/sanitize-json';
 import type { ExtendedRequest } from '@/core/infrastructure/types/http/extended-request.type';
 
 @Injectable()
-export class LoggerMiddleware implements NestMiddleware {
-  constructor(
-    @Inject('LOGGER_SERVICE')
-    private readonly logger: Logger,
-    private readonly configService: ConfigService,
-  ) {}
+export class RequestLoggerMiddleware implements NestMiddleware {
+  constructor(private readonly configService: ConfigService) {}
 
   public use(req: ExtendedRequest, res: Response, next: NextFunction) {
     const { method, path, query, cookies, body, headers } = req;
@@ -39,39 +35,49 @@ export class LoggerMiddleware implements NestMiddleware {
       const duration = Date.now() - start;
       const contentLength = Number(res.get('Content-Length') || 0);
       const status = res.statusCode;
-      this.log({
-        type: 'Response',
+      this.log(
+        {
+          type: 'Response',
+          requestId,
+          status,
+          statusMessage: res.statusMessage,
+          duration: `${duration} ms`,
+          contentLength: `${contentLength} B`,
+          data:
+            status === HttpStatus.PARTIAL_CONTENT
+              ? '<Buffer>'
+              : status === HttpStatus.NO_CONTENT
+                ? '<Empty>'
+                : '<JSON>',
+        },
         requestId,
-        status,
-        statusMessage: res.statusMessage,
-        duration: `${duration} ms`,
-        contentLength: `${contentLength} B`,
-        data: status === HttpStatus.PARTIAL_CONTENT ? '<Buffer>' : '<JSON>',
-      });
+      );
     });
 
-    this.log({
-      type: 'Request',
+    this.log(
+      {
+        type: 'Request',
+        requestId,
+        method,
+        path,
+        context,
+        headers,
+        query,
+        cookies,
+        body,
+      },
       requestId,
-      method,
-      path,
-      context,
-      headers,
-      query,
-      cookies,
-      body,
-    });
+    );
 
     return next();
   }
 
-  private log(data: Json) {
+  private log(data: Json, context: string) {
     const { nodeEnv } = this.configService.get('environment');
     const body = sanitizeJson(data);
 
-    if (nodeEnv === 'production') {
-    } else {
-      this.logger.log(body, data.type);
+    if (nodeEnv !== 'production') {
+      Logger.log(body, context);
     }
   }
 }

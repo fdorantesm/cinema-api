@@ -10,7 +10,7 @@ export abstract class ResourceEntity<T extends ResourceProps> extends BaseEntity
   protected _updatedAt?: Date;
   protected _context: Context;
 
-  protected constructor(data: T) {
+  constructor(data: T) {
     super(data);
     this._uuid = data.uuid;
     this._isActive = data.isActive;

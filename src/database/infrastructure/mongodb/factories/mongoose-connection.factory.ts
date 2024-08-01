@@ -1,5 +1,6 @@
 import { Connection } from 'mongoose';
-import * as mongoosePaginate from 'mongoose-paginate';
+// eslint-disable-next-line
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 import { anonymoose } from 'mongoose-anonymoose';
 
 export class MongooseConnectionFactory {

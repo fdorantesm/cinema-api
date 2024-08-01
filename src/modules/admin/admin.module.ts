@@ -1,7 +1,6 @@
-import { BansModule } from '@/modules/admin/bans/bans.module';
 import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [BansModule],
+  imports: [],
 })
 export class AdminModule {}

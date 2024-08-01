@@ -24,7 +24,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
     }
   }
 
-  public async create(contract: I): Promise<E> {
+  public async create(contract: I): Promise<E | undefined> {
     const document = await this.store.insert({
       ...contract,
       isDeleted: this.options?.softDelete,
@@ -32,6 +32,8 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
     if (document) {
       return this.mapToEntity(document);
     }
+
+    return undefined;
   }
 
   public async find(
@@ -39,13 +41,13 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
     projection?: any,
     options?: QueryParsedOptions,
   ): Promise<E[]> {
-    const q = { ...filter } as any;
+    const queryFilter = { ...filter } as any;
 
     if (this.options?.softDelete !== undefined) {
-      q.isDeleted = this.options.softDelete;
+      queryFilter.isDeleted = this.options.softDelete;
     }
 
-    const query = this.store.find(q, projection);
+    const query = this.store.find(queryFilter, projection);
 
     if (options?.sort) {
       query.sort(options.sort);
@@ -64,13 +66,13 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
   }
 
   public async findOne(filter?: Partial<I>, projection?: any): Promise<E> {
-    const q = { ...filter } as any;
+    const queryFilter = { ...filter } as any;
 
     if (this.options?.softDelete !== undefined) {
-      q.isDeleted = this.options.softDelete;
+      queryFilter.isDeleted = this.options.softDelete;
     }
 
-    const doc = await this.store.findOne(q, projection);
+    const doc = await this.store.findOne(queryFilter, projection);
 
     if (doc) {
       return this.mapToEntity(doc);
@@ -93,24 +95,24 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
     projection?: any,
     options?: QueryParsedOptions,
   ): Promise<E[]> {
-    const q = { ...filter } as any;
+    const queryFilter = { ...filter } as any;
 
     if (this.options?.softDelete !== undefined) {
-      q.isDeleted = this.options.softDelete;
+      queryFilter.isDeleted = this.options.softDelete;
     }
 
-    const query = this.store.find(q, projection);
+    const query = this.store.find(queryFilter, projection);
 
     if (options.sort) {
-      q.sort(options.sort);
+      queryFilter.sort(options.sort);
     }
 
     if (options.limit) {
-      q.limit(options.limit);
+      queryFilter.limit(options.limit);
     }
 
     if (options.offset) {
-      q.skip(options.offset);
+      queryFilter.skip(options.offset);
     }
 
     const documents = await query;
@@ -178,7 +180,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
 
   public async delete(filter: Partial<I>): Promise<boolean> {
     const document = await this.store.remove(filter, { multi: false });
-    return !!document;
+    return Boolean(document);
   }
 
   public async findManyByUuids(uuids: string[]): Promise<E[]> {
@@ -194,7 +196,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
 
   public async deleteMany(filter: Partial<I>): Promise<boolean> {
     const document = await this.store.remove(filter, { multi: true });
-    return !!document;
+    return Boolean(document);
   }
 
   public count(filter?: Partial<I>): Promise<number> {
@@ -203,7 +205,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
 
   public async softDelete(filter: Partial<I>): Promise<boolean> {
     const document = await this.store.update(filter, { isDeleted: true });
-    return !!document;
+    return Boolean(document);
   }
 
   public async restore(filter: Partial<I>): Promise<E> {
@@ -256,6 +258,8 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
     filter: Partial<I>,
     options: QueryParsedOptions,
   ): Promise<Pagination<E>> {
+    const limit = options.limit ?? 10;
+    const offset = options.offset ?? 0;
     const total = await this.store.count(filter as I);
     const docs = await this.store
       .find(filter as I)
@@ -265,9 +269,8 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
       .exec()
       .then((documents) => documents.map((document) => this.mapToEntity(document)));
 
-    const pages = Math.ceil(total / options.limit);
-    const page = Math.ceil(options.offset / options.limit) + 1;
-    const limit = options.limit;
+    const pages = Math.ceil(total / limit);
+    const page = Math.ceil(offset / limit) + 1;
 
     return {
       limit,
@@ -275,7 +278,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
       total,
       pages,
       page,
-      offset: options.offset,
+      offset,
       nextPage: page < pages ? page + 1 : null,
       prevPage: page > 1 ? page - 1 : null,
       hasMore: page < pages,

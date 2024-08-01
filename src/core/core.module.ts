@@ -6,7 +6,7 @@ import { configOptions } from '@/config';
 import { HttpExceptionFilter } from '@/core/infrastructure/filters/exception.filter';
 import { TransformInterceptor } from '@/core/infrastructure/interceptors/transform.interceptor';
 import { JsonLoggerService } from '@/core/infrastructure/logger/json.logger';
-import { LoggerMiddleware } from '@/core/infrastructure/middlewares/logger.middleware';
+import { RequestLoggerMiddleware } from '@/core/infrastructure/middlewares/request-logger.middleware';
 import { RequestContextMiddleware } from '@/core/infrastructure/middlewares/request-context.middleware';
 
 @Module({
@@ -25,8 +25,8 @@ import { RequestContextMiddleware } from '@/core/infrastructure/middlewares/requ
       useValue: JsonLoggerService.getInstance(),
     },
     {
-      provide: LoggerMiddleware,
-      useClass: LoggerMiddleware,
+      provide: RequestLoggerMiddleware,
+      useClass: RequestLoggerMiddleware,
     },
     {
       provide: RequestContextMiddleware,
@@ -35,8 +35,8 @@ import { RequestContextMiddleware } from '@/core/infrastructure/middlewares/requ
   ],
 })
 export class CoreModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestContextMiddleware, LoggerMiddleware).forRoutes({
+  public configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestContextMiddleware, RequestLoggerMiddleware).forRoutes({
       path: '*',
       method: RequestMethod.ALL,
     });
