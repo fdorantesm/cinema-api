@@ -1,3 +1,4 @@
+import { CqrsModule } from '@nestjs/cqrs';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -8,9 +9,11 @@ import { AuditoriumsService } from '@/modules/auditoriums/infrastructure/persist
 import { ListAuditoriumsUseCase } from '@/modules/auditoriums/application/use-cases/list-auditoriums.use-case';
 import { GetAuditoriumUseCase } from '@/modules/auditoriums/application/use-cases/get-auditorium.use-case';
 import { AuditoriumsController } from '@/modules/auditoriums/infrastructure/http/controllers/auditoriums.controller';
+import { GetAuditoriumSeatsByShowtimeUseCase } from '@/modules/auditoriums/application/use-cases/get-auditorium-seats.use-case';
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: AuditoriumModel.name,
@@ -21,6 +24,7 @@ import { AuditoriumsController } from '@/modules/auditoriums/infrastructure/http
   providers: [
     ListAuditoriumsUseCase,
     GetAuditoriumUseCase,
+    GetAuditoriumSeatsByShowtimeUseCase,
     {
       provide: 'AUDITORIUMS_REPOSITORY',
       useClass: AuditoriumsDatabaseRepository,
