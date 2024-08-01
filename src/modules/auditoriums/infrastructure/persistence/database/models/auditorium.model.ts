@@ -10,14 +10,17 @@ import { ResourceDocument } from '@/core/infrastructure/models/resource-document
 })
 export class AuditoriumModel extends ResourceDocument {
   @Prop({ type: String })
-  name: string;
+  public name: string;
 
   @Prop({ type: Number })
-  capacity: number;
+  public capacity: number;
 
   @Prop({ type: String })
-  description: string;
+  public description: string;
 
   @Prop({ type: String, index: true })
-  showtimes: string[];
+  public showtimes: string[];
+
+  @Prop({ type: String, index: true })
+  public movieId: string;
 }

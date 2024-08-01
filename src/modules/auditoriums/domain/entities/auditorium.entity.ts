@@ -37,4 +37,12 @@ export class AuditoriumEntity extends ResourceEntity<Auditorium> {
   public setShowtimes(showtimes: string[]): void {
     this._props.showtimes = showtimes;
   }
+
+  public setMovieId(movieId: string): void {
+    this._props.movieId = movieId;
+  }
+
+  public getMovieId(): string {
+    return this._props.movieId;
+  }
 }

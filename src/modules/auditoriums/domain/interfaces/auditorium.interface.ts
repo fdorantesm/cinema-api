@@ -5,4 +5,5 @@ export interface Auditorium extends ResourceProps {
   capacity: number;
   description: string;
   showtimes: string[];
+  movieId: string;
 }
