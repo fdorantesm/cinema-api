@@ -8,6 +8,7 @@ import { MoviesModule } from '@/modules/movies/movies.module';
 import { RolesModule } from '@/modules/roles/roles.module';
 import { SharedModule } from '@/modules/shared/shared.module';
 import { UsersModule } from '@/modules/users/users.module';
+import { AuditoriumModule } from '@/modules/auditoriums/auditorium.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsersModule } from '@/modules/users/users.module';
     SharedModule,
     AdminModule,
     MoviesModule,
+    AuditoriumModule,
   ],
 })
 export class AppModule {}

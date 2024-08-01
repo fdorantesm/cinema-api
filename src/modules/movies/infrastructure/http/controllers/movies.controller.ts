@@ -18,7 +18,7 @@ export class MoviesController {
   @ApiQuery({ name: 'filter', required: false, type: 'string' })
   @ApiQuery({ name: 'options', required: false, type: 'string' })
   @Get('/')
-  async listMovies(
+  public async listMovies(
     @Ctx() ctx: Context,
     @QueryParser('filter') filter,
     @QueryParser('options') options,
@@ -27,7 +27,7 @@ export class MoviesController {
   }
 
   @Get('/:uuid')
-  async getMovie(@Ctx() ctx: Context, @Param('uuid') uuid: string) {
+  public async getMovie(@Ctx() ctx: Context, @Param('uuid') uuid: string) {
     return await this.getMovieUseCase.execute(ctx, uuid);
   }
 }
