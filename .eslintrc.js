@@ -25,7 +25,7 @@ module.exports = {
       'error',
       { argsIgnorePattern: '^(_|ctx|req|res|next|err)' },
     ],
-    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-extraneous-class': 'off',
   },
   overrides: [
     {

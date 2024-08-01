@@ -1,5 +1,5 @@
 import { Connection } from 'mongoose';
-import * as mongoosePaginate from 'mongoose-paginate';
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 import { anonymoose } from 'mongoose-anonymoose';
 
 export class MongooseConnectionFactory {
