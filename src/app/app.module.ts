@@ -9,6 +9,7 @@ import { RolesModule } from '@/modules/roles/roles.module';
 import { SharedModule } from '@/modules/shared/shared.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { AuditoriumModule } from '@/modules/auditoriums/auditorium.module';
+import { SeatsModule } from '@/modules/seats/seats.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuditoriumModule } from '@/modules/auditoriums/auditorium.module';
     AdminModule,
     MoviesModule,
     AuditoriumModule,
+    SeatsModule,
   ],
 })
 export class AppModule {}
